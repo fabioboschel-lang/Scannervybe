@@ -2,6 +2,7 @@ import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
 import { supabase } from "./supabase.js";
+import { Create } from "./create.js";
 
 const app =
   document.getElementById("app");
@@ -13,8 +14,9 @@ const routes = {
 
   home: Home,
 
-  scanner: Scanner
+  scanner: Scanner,
 
+  create: Create,
 };
 
 
@@ -73,7 +75,7 @@ if (data.session) {
 
   }
 
-  navigate("home");
+  navigate("create");
 
 } else {
 
