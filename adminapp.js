@@ -1,9 +1,7 @@
 import { Sesion } from "./sesion.js";
-import { Rueda } from "./rueda.js";
 import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
 import { supabase } from "./supabase.js";
-
 
 const app =
   document.getElementById("app");
@@ -13,8 +11,6 @@ const routes = {
 
   sesion: Sesion,
 
-  rueda: Rueda,
-
   home: Home,
 
   scanner: Scanner
@@ -22,13 +18,10 @@ const routes = {
 };
 
 
-
 export function navigate(route) {
-
 
   const screen =
     routes[route];
-
 
   if (!screen) {
 
@@ -41,15 +34,12 @@ export function navigate(route) {
 
   }
 
-
   screen(app);
 
 }
 
 
-
 async function iniciarApp() {
-
 
   const {
     data
@@ -57,27 +47,41 @@ async function iniciarApp() {
   await supabase.auth.getSession();
 
 
+if (data.session) {
 
-  if (data.session) {
+  const user =
+    data.session.user;
 
+  const { error } =
+    await supabase
+      .from("Socios")
+      .upsert(
+        {
+          "ID usuario": user.id,
+          Gmail: user.email
+        },
+        {
+          onConflict: "ID usuario"
+        }
+      );
 
-    await navigate(
-      "rueda"
-    );
+  if (error) {
 
+    console.error(error);
 
-  } else {
-
-
-    navigate(
-      "sesion"
-    );
-
+    return;
 
   }
 
+  navigate("home");
+
+} else {
+
+  navigate("sesion");
+
 }
 
+}
 
 
 iniciarApp();
