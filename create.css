@@ -1,0 +1,111 @@
+.create-view {
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 40px 24px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 22px;
+
+  background: #f6f7fb;
+
+}
+
+.create-title {
+
+  margin: 0 0 18px 0;
+
+  font-size: 32px;
+
+  font-weight: 700;
+
+  color: #111;
+
+  text-align: center;
+
+}
+
+.create-input {
+
+  width: 100%;
+
+  max-width: 380px;
+
+  height: 58px;
+
+  box-sizing: border-box;
+
+  padding: 0 18px;
+
+  border: 2px solid #d9d9d9;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-size: 18px;
+
+  outline: none;
+
+  transition: .2s;
+
+}
+
+.create-input:focus {
+
+  border-color: #000;
+
+}
+
+.create-input::placeholder {
+
+  color: #888;
+
+}
+
+.create-btn {
+
+  width: 100%;
+
+  max-width: 380px;
+
+  height: 60px;
+
+  margin-top: 14px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #000;
+
+  color: #fff;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+}
+
+.create-btn:active {
+
+  transform: scale(.98);
+
+}
