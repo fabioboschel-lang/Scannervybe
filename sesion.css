@@ -1,0 +1,71 @@
+.session-view {
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #f6f7fb;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+}
+
+
+.google-btn {
+
+  width: 100%;
+
+  max-width: 360px;
+
+  height: 60px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  color: #222;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,0.12);
+
+  transition: 0.2s;
+
+}
+
+
+.google-btn:hover {
+
+  transform: translateY(-2px);
+
+}
+
+
+.google-btn:active {
+
+  transform: scale(0.97);
+
+}
