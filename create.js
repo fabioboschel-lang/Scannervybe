@@ -95,17 +95,33 @@ export function Create(app) {
           return;
 
         }
+const {
+  data: sessionData
+} = await supabase.auth.getSession();
 
+const user =
+  sessionData.session?.user;
+
+if (!user) {
+
+  alert(
+    "No hay ninguna sesión iniciada."
+  );
+
+  return;
+
+}
         try {
 
           const { error } =
             await supabase
-              .from("Eventos")
-              .insert({
-                nombre: nombre,
-                fecha: fecha,
-                valor: Number(valor)
-              });
+  .from("Eventos")
+  .insert({
+    nombre: nombre,
+    fecha: fecha,
+    valor: Number(valor),
+    "ID usuario": user.id
+  });
 
           if (error) {
             throw error;
