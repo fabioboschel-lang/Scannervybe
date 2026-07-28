@@ -75,7 +75,36 @@ if (data.session) {
 
   }
 
-  navigate("create");
+  const {
+  data: evento,
+  error: eventoError
+} =
+  await supabase
+    .from("Eventos")
+    .select("nombre")
+    .eq(
+      "ID usuario",
+      user.id
+    )
+    .maybeSingle();
+
+if (eventoError) {
+
+  console.error(eventoError);
+
+  return;
+
+}
+
+  if (evento) {
+
+    navigate("home");
+
+  } else {
+
+    navigate("create");
+
+  }
 
 } else {
 
