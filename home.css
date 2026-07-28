@@ -6,11 +6,47 @@
 
   display: flex;
 
+  flex-direction: column;
+
   justify-content: center;
 
   align-items: center;
 
+  gap: 24px;
+
   background: #ffffff;
+
+}
+
+.create-event-btn {
+
+  width: 280px;
+
+  height: 55px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+}
+
+.create-event-btn:active {
+
+  transform: scale(.97);
 
 }
 
@@ -43,35 +79,5 @@
 .scan-btn:active {
 
   transform: scale(0.96);
-
-}
-
-.create-event-btn {
-
-  width: 280px;
-
-  height: 55px;
-
-  border: none;
-
-  border-radius: 14px;
-
-  background: #ffffff;
-
-  color: #111;
-
-  font-size: 18px;
-
-  font-weight: bold;
-
-  cursor: pointer;
-
-  transition: .2s;
-
-}
-
-.create-event-btn:active {
-
-  transform: scale(.97);
 
 }

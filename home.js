@@ -4,24 +4,25 @@ export function Home(app) {
 
   app.innerHTML = `
 
-    <div class="home-view">
+  <div class="home-view">
 
-      <button
-        id="scanBtn"
-        class="scan-btn"
-      >
-        Escanear
-        <button
-  id="createEventBtn"
-  class="create-event-btn"
->
-  Publicar evento
-</button>
-      </button>
+    <button
+      id="createEventBtn"
+      class="create-event-btn"
+    >
+      Publicar evento
+    </button>
 
-    </div>
+    <button
+      id="scanBtn"
+      class="scan-btn"
+    >
+      Escanear
+    </button>
 
-  `;
+  </div>
+
+`;
   document
   .getElementById("createEventBtn")
   .addEventListener(
