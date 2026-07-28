@@ -11,11 +11,23 @@ export function Home(app) {
         class="scan-btn"
       >
         Escanear
+        <button
+  id="createEventBtn"
+  class="create-event-btn"
+>
+  Publicar evento
+</button>
       </button>
 
     </div>
 
   `;
+  document
+  .getElementById("createEventBtn")
+  .addEventListener(
+    "click",
+    () => navigate("create")
+  );
 
   document
     .getElementById("scanBtn")

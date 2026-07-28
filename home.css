@@ -45,3 +45,33 @@
   transform: scale(0.96);
 
 }
+
+.create-event-btn {
+
+  width: 280px;
+
+  height: 55px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+}
+
+.create-event-btn:active {
+
+  transform: scale(.97);
+
+}

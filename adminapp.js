@@ -102,7 +102,7 @@ if (eventoError) {
 
   } else {
 
-    navigate("create");
+    navigate("home");
 
   }
 
