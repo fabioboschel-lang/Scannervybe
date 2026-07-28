@@ -154,7 +154,7 @@ export function Scanner(app) {
 
         {
           fps: 10,
-          qrbox: 250
+          
         },
 
         (decodedText) => {
