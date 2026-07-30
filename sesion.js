@@ -18,19 +18,35 @@ export function Sesion(app) {
   `;
 
   document
-    .getElementById("googleBtn")
-    .addEventListener(
-      "click",
-      async () => {
+  .getElementById("googleBtn")
+  .addEventListener(
+    "click",
+    async () => {
 
-        const { error } =
-          await supabase.auth.signInWithOAuth({
+      alert(
+        "Redirect: https://fabioboschel-lang.github.io/Scannervybe/"
+      );
 
-            provider: "google",
+      const { data, error } =
+        await supabase.auth.signInWithOAuth({
 
-            options: {
-              redirectTo: window.location.origin
-            }
+          provider: "google",
+
+          options: {
+            redirectTo:
+              "https://fabioboschel-lang.github.io/Scannervybe/"
+          }
+
+        });
+
+      console.log(data);
+
+      if (error) {
+        console.error(error);
+      }
+
+    }
+  );
 
           });
 
