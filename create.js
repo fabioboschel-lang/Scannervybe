@@ -5,7 +5,6 @@ import { supabase } from "./supabase.js";
 export function Create(app) {
 
   app.innerHTML = `
-
     <div class="create-view">
 
       <h1 class="create-title">
@@ -16,7 +15,6 @@ export function Create(app) {
         for="eventImage"
         class="image-selector"
       >
-
         <span id="imageText">
           Seleccionar imagen
         </span>
@@ -26,7 +24,6 @@ export function Create(app) {
           class="image-preview"
           style="display: none;"
         >
-
       </label>
 
       <input
@@ -86,7 +83,6 @@ export function Create(app) {
       </button>
 
     </div>
-
   `;
 
 
@@ -100,12 +96,6 @@ export function Create(app) {
     document.getElementById("imageText");
 
 
-  /*
-   * PREVISUALIZACIÓN
-   *
-   * Esto NO sube nada a Supabase.
-   */
-
   imageInput.addEventListener(
     "change",
     () => {
@@ -113,7 +103,9 @@ export function Create(app) {
       const imagen =
         imageInput.files[0];
 
-      if (!imagen) return;
+      if (!imagen) {
+        return;
+      }
 
       imagePreview.src =
         URL.createObjectURL(imagen);
@@ -127,10 +119,6 @@ export function Create(app) {
     }
   );
 
-
-  /*
-   * PUBLICAR EVENTO
-   */
 
   document
     .getElementById("createBtn")
@@ -276,17 +264,15 @@ export function Create(app) {
 
         try {
 
-          /*
-           * RECIÉN ACÁ SE SUBE LA IMAGEN
-           */
-
           const extension =
             imagen.name
               .split(".")
               .pop();
 
+
           const nombreArchivo =
             `${crypto.randomUUID()}.${extension}`;
+
 
           const ruta =
             `${user.id}/${nombreArchivo}`;
@@ -311,10 +297,6 @@ export function Create(app) {
           }
 
 
-          /*
-           * URL DE LA IMAGEN
-           */
-
           const {
             data: urlData
           } =
@@ -327,10 +309,6 @@ export function Create(app) {
           const imagenUrl =
             urlData.publicUrl;
 
-
-          /*
-           * INSERT DEL EVENTO
-           */
 
           const {
             error
