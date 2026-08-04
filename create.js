@@ -1,4 +1,4 @@
-```javascript
+
 import { navigate } from "./adminapp.js";
 import { supabase } from "./supabase.js";
 
@@ -359,4 +359,4 @@ export function Create(app) {
     );
 
 }
-```
+
