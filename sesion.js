@@ -18,37 +18,28 @@ export function Sesion(app) {
   `;
 
   document
-  .getElementById("googleBtn")
-  .addEventListener(
-    "click",
-    async () => {
+    .getElementById("googleBtn")
+    .addEventListener(
+      "click",
+      async () => {
 
-      alert(
-        "Redirect: https://fabioboschel-lang.github.io/Scannervybe/"
-      );
+        alert(
+          "Redirect: https://fabioboschel-lang.github.io/Scannervybe/"
+        );
 
-      const { data, error } =
-        await supabase.auth.signInWithOAuth({
+        const { data, error } =
+          await supabase.auth.signInWithOAuth({
 
-          provider: "google",
+            provider: "google",
 
-          options: {
-            redirectTo:
-              "https://fabioboschel-lang.github.io/Scannervybe/"
-          }
-
-        });
-
-      console.log(data);
-
-      if (error) {
-        console.error(error);
-      }
-
-    }
-  );
+            options: {
+              redirectTo:
+                "https://fabioboschel-lang.github.io/Scannervybe/"
+            }
 
           });
+
+        console.log(data);
 
         if (error) {
 
@@ -61,7 +52,6 @@ export function Sesion(app) {
         }
 
       }
-
     );
 
 }
