@@ -1,3 +1,4 @@
+```javascript
 import { navigate } from "./adminapp.js";
 import { supabase } from "./supabase.js";
 
@@ -11,18 +12,35 @@ export function Create(app) {
         Crear evento
       </h1>
 
+      <label
+        for="eventImage"
+        class="image-selector"
+      >
+
+        <span id="imageText">
+          Seleccionar imagen
+        </span>
+
+        <img
+          id="imagePreview"
+          class="image-preview"
+          style="display: none;"
+        >
+
+      </label>
+
+      <input
+        id="eventImage"
+        type="file"
+        accept="image/*"
+        hidden
+      >
+
       <input
         id="eventName"
         class="create-input"
         type="text"
         placeholder="Nombre del evento"
-      >
-
-      <input
-        id="eventImage"
-        class="create-input"
-        type="url"
-        placeholder="Imagen (URL)"
       >
 
       <textarea
@@ -62,13 +80,57 @@ export function Create(app) {
       <button
         id="createBtn"
         class="create-btn"
+        type="button"
       >
-        Crear evento
+        Publicar evento
       </button>
 
     </div>
 
   `;
+
+
+  const imageInput =
+    document.getElementById("eventImage");
+
+  const imagePreview =
+    document.getElementById("imagePreview");
+
+  const imageText =
+    document.getElementById("imageText");
+
+
+  /*
+   * PREVISUALIZACIÓN
+   *
+   * Esto NO sube nada a Supabase.
+   */
+
+  imageInput.addEventListener(
+    "change",
+    () => {
+
+      const imagen =
+        imageInput.files[0];
+
+      if (!imagen) return;
+
+      imagePreview.src =
+        URL.createObjectURL(imagen);
+
+      imagePreview.style.display =
+        "block";
+
+      imageText.style.display =
+        "none";
+
+    }
+  );
+
+
+  /*
+   * PUBLICAR EVENTO
+   */
 
   document
     .getElementById("createBtn")
@@ -83,10 +145,7 @@ export function Create(app) {
             .trim();
 
         const imagen =
-          document
-            .getElementById("eventImage")
-            .value
-            .trim();
+          imageInput.files[0];
 
         const descripcion =
           document
@@ -117,40 +176,83 @@ export function Create(app) {
             .value
             .trim();
 
+
         if (!nombre) {
-          alert("Ingresá el nombre del evento.");
+
+          alert(
+            "Ingresá el nombre del evento."
+          );
+
           return;
+
         }
+
 
         if (!imagen) {
-          alert("Ingresá la imagen.");
+
+          alert(
+            "Seleccioná una imagen."
+          );
+
           return;
+
         }
+
 
         if (!descripcion) {
-          alert("Ingresá la descripción.");
+
+          alert(
+            "Ingresá la descripción."
+          );
+
           return;
+
         }
+
 
         if (!redes) {
-          alert("Ingresá las redes sociales.");
+
+          alert(
+            "Ingresá las redes sociales."
+          );
+
           return;
+
         }
+
 
         if (!ubicacion) {
-          alert("Ingresá la ubicación.");
+
+          alert(
+            "Ingresá la ubicación."
+          );
+
           return;
+
         }
+
 
         if (!fecha) {
-          alert("Seleccioná la fecha.");
+
+          alert(
+            "Seleccioná la fecha."
+          );
+
           return;
+
         }
 
+
         if (!valor) {
-          alert("Ingresá el valor de la entrada.");
+
+          alert(
+            "Ingresá el valor de entrada."
+          );
+
           return;
+
         }
+
 
         const {
           data: sessionData
@@ -159,6 +261,7 @@ export function Create(app) {
 
         const user =
           sessionData.session?.user;
+
 
         if (!user) {
 
@@ -170,16 +273,75 @@ export function Create(app) {
 
         }
 
+
         try {
 
-          const { error } =
+          /*
+           * RECIÉN ACÁ SE SUBE LA IMAGEN
+           */
+
+          const extension =
+            imagen.name
+              .split(".")
+              .pop();
+
+          const nombreArchivo =
+            `${crypto.randomUUID()}.${extension}`;
+
+          const ruta =
+            `${user.id}/${nombreArchivo}`;
+
+
+          const {
+            error: uploadError
+          } =
+            await supabase
+              .storage
+              .from("eventos")
+              .upload(
+                ruta,
+                imagen
+              );
+
+
+          if (uploadError) {
+
+            throw uploadError;
+
+          }
+
+
+          /*
+           * URL DE LA IMAGEN
+           */
+
+          const {
+            data: urlData
+          } =
+            supabase
+              .storage
+              .from("eventos")
+              .getPublicUrl(ruta);
+
+
+          const imagenUrl =
+            urlData.publicUrl;
+
+
+          /*
+           * INSERT DEL EVENTO
+           */
+
+          const {
+            error
+          } =
             await supabase
               .from("Eventos")
               .insert({
 
                 nombre: nombre,
 
-                imagen: imagen,
+                imagen: imagenUrl,
 
                 descripcion: descripcion,
 
@@ -195,9 +357,13 @@ export function Create(app) {
 
               });
 
+
           if (error) {
+
             throw error;
+
           }
+
 
           navigate("home");
 
@@ -206,13 +372,13 @@ export function Create(app) {
           console.error(err);
 
           alert(
-            "No se pudo crear el evento."
+            "No se pudo publicar el evento."
           );
 
         }
 
       }
-
     );
 
 }
+```
