@@ -144,7 +144,7 @@ async function cargarEnlaceEvento() {
   } =
     await supabase
       .from("Eventos")
-      .select("public_id")
+      .select("id")
       .eq(
         "ID usuario",
         user.id
@@ -179,7 +179,7 @@ async function cargarEnlaceEvento() {
    */
 
   const url =
-    `https://fabioboschel-lang.github.io/eventos/#/evento/${evento.public_id}`;
+    `https://fabioboschel-lang.github.io/eventos/#/evento/${evento.id}`;
 
 
   /*
