@@ -1,155 +1,113 @@
+```javascript
 import { supabase } from "./supabase.js";
 
 export function MercadoPago(app) {
 
-app.innerHTML = `
+  app.innerHTML = `
 
-```
-<div class="mercadopago-view">
+    <div class="mercadopago-view">
 
-  <h1 class="mercadopago-title">
-    Conectá tu cuenta de Mercado Pago
-  </h1>
+      <h1 class="mercadopago-title">
+        Conectá tu cuenta de Mercado Pago
+      </h1>
 
-  <p class="mercadopago-description">
-    Conectá tu cuenta para poder recibir los pagos de tus eventos.
-  </p>
+      <p class="mercadopago-description">
+        Conectá tu cuenta para poder recibir los pagos de tus eventos.
+      </p>
 
-  <button
-    id="mercadopagoBtn"
-    class="mercadopago-btn"
-  >
-    Conectar Mercado Pago
-  </button>
+      <button
+        id="mercadopagoBtn"
+        class="mercadopago-btn"
+      >
+        Conectar Mercado Pago
+      </button>
 
-</div>
-```
+    </div>
 
-`;
+  `;
 
-document
-.getElementById("mercadopagoBtn")
-.addEventListener(
-"click",
-async () => {
+  document
+    .getElementById("mercadopagoBtn")
+    .addEventListener(
+      "click",
+      async () => {
 
-```
-    const {
-      data,
-      error
-    } =
-      await supabase.auth.getSession();
+        const {
+          data,
+          error
+        } =
+          await supabase.auth.getSession();
 
-    if (error) {
+        if (error) {
 
-      console.error(error);
+          console.error(error);
 
-      alert(
-        "No se pudo comprobar la sesión."
-      );
+          alert(
+            "No se pudo comprobar la sesión."
+          );
 
-      return;
+          return;
 
-    }
+        }
 
-    const user =
-      data.session?.user;
+        const user =
+          data.session?.user;
 
-    if (!user) {
+        if (!user) {
 
-      alert(
-        "Primero tenés que iniciar sesión."
-      );
+          alert(
+            "Primero tenés que iniciar sesión."
+          );
 
-      return;
+          return;
 
-    }
+        }
 
-    /*
-     * Identificador único para este intento
-     * de autorización.
-     *
-     * NO contiene información sensible.
-     */
+        const state =
+          user.id;
 
-    const state =
-      crypto.randomUUID();
+        const clientId =
+          "3944581132326328";
 
-    /*
-     * Guardamos temporalmente el state
-     * junto con el usuario que inició
-     * la autorización.
-     *
-     * Esto nos permitirá comprobar
-     * posteriormente que el código recibido
-     * corresponde al usuario correcto.
-     */
+        const redirectUri =
+          "https://fabioboschel-lang.github.io/Scannervybe/";
 
-    sessionStorage.setItem(
-      "mercadopago_oauth_state",
-      state
+        const authorizationUrl =
+          new URL(
+            "https://auth.mercadopago.com.ar/authorization"
+          );
+
+        authorizationUrl.searchParams.set(
+          "client_id",
+          clientId
+        );
+
+        authorizationUrl.searchParams.set(
+          "response_type",
+          "code"
+        );
+
+        authorizationUrl.searchParams.set(
+          "platform_id",
+          "mp"
+        );
+
+        authorizationUrl.searchParams.set(
+          "redirect_uri",
+          redirectUri
+        );
+
+        authorizationUrl.searchParams.set(
+          "state",
+          state
+        );
+
+        window.location.href =
+          authorizationUrl.toString();
+
+      }
     );
-
-    sessionStorage.setItem(
-      "mercadopago_oauth_user",
-      user.id
-    );
-
-    /*
-     * ID de la aplicación de Mercado Pago.
-     *
-     * IMPORTANTE:
-     * reemplazar este valor por el APP_ID
-     * real de tu aplicación.
-     */
-
-    const clientId =
-      "3944581132326328";
-
-    /*
-     * Esta URL debe ser EXACTAMENTE
-     * la misma que configuraste en
-     * Mercado Pago.
-     */
-
-    const redirectUri =
-      "https://fabioboschel-lang.github.io/Scannervybe/";
-
-    const authorizationUrl =
-      new URL(
-        "https://auth.mercadopago.com.ar/authorization"
-      );
-
-    authorizationUrl.searchParams.set(
-      "client_id",
-      clientId
-    );
-
-    authorizationUrl.searchParams.set(
-      "response_type",
-      "code"
-    );
-
-    authorizationUrl.searchParams.set(
-      "platform_id",
-      "mp"
-    );
-
-    authorizationUrl.searchParams.set(
-      "redirect_uri",
-      redirectUri
-    );
-
-    authorizationUrl.searchParams.set(
-      "state",
-      state
-    );
-
-    window.location.href =
-      authorizationUrl.toString();
-
-  }
-);
-```
 
 }
+```
+
