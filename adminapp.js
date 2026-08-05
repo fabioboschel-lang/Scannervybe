@@ -3,22 +3,18 @@ import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
 import { supabase } from "./supabase.js";
 import { Create } from "./create.js";
-
+import { MercadoPago } from "./mercadopago.js";
 const app =
   document.getElementById("app");
 
 
 const routes = {
-
   sesion: Sesion,
-
   home: Home,
-
   scanner: Scanner,
-
   create: Create,
+  mercadopago: MercadoPago,
 };
-
 
 export function navigate(route) {
 
