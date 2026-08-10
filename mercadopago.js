@@ -1,4 +1,4 @@
-```javascript
+
 import { supabase } from "./supabase.js";
 
 export function MercadoPago(app) {
@@ -109,5 +109,4 @@ export function MercadoPago(app) {
     );
 
 }
-```
 
