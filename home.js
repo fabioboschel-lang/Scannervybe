@@ -46,11 +46,24 @@ export function Home(app) {
         Escanear
       </button>
 
+      <button
+        id="mercadopagoBtn"
+        class="mercadopago-btn"
+      >
+        conetar mercado pago
+      </button>
+
     </div>
 
   `;
 
-
+document
+    .getElementById("mercadopagoBtn")
+    .addEventListener(
+      "click",
+      () => navigate("mercadopago")
+    );
+  
   /*
    * PUBLICAR EVENTO
    */
