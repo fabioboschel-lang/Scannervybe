@@ -32,48 +32,15 @@ export function Home(app) {
 
 
       <button
-        id="createEventBtn"
-        class="create-event-btn"
-      >
-        Publicar evento
-      </button>
-
-
-      <button
         id="scanBtn"
         class="scan-btn"
       >
         Escanear
       </button>
 
-      <button
-        id="mercadopagoBtn"
-        class="mercadopago-btn"
-      >
-        conetar mercado pago
-      </button>
-
     </div>
 
   `;
-
-document
-    .getElementById("mercadopagoBtn")
-    .addEventListener(
-      "click",
-      () => navigate("mercadopago")
-    );
-  
-  /*
-   * PUBLICAR EVENTO
-   */
-
-  document
-    .getElementById("createEventBtn")
-    .addEventListener(
-      "click",
-      () => navigate("create")
-    );
 
 
   /*
