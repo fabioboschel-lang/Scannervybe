@@ -1,3 +1,4 @@
+```javascript
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
@@ -10,11 +11,17 @@ const app =
 
 
 const routes = {
+
   sesion: Sesion,
+
   home: Home,
+
   scanner: Scanner,
+
   create: Create,
+
   mercadopago: MercadoPago,
+
 };
 
 
@@ -52,11 +59,13 @@ async function procesarMercadoPago() {
   const state =
     params.get("state");
 
+
   if (!code && !state) {
 
     return false;
 
   }
+
 
   if (!code || !state) {
 
@@ -68,11 +77,13 @@ async function procesarMercadoPago() {
 
   }
 
+
   const {
     data,
     error
   } =
     await supabase.auth.getSession();
+
 
   if (error) {
 
@@ -82,8 +93,10 @@ async function procesarMercadoPago() {
 
   }
 
+
   const user =
     data.session?.user;
+
 
   if (!user) {
 
@@ -95,6 +108,7 @@ async function procesarMercadoPago() {
 
   }
 
+
   if (state !== user.id) {
 
     console.error(
@@ -104,6 +118,7 @@ async function procesarMercadoPago() {
     return true;
 
   }
+
 
   try {
 
@@ -121,22 +136,26 @@ async function procesarMercadoPago() {
         }
       );
 
+
     if (functionError) {
 
       throw functionError;
 
     }
 
+
     console.log(
       "Respuesta de Mercado Pago:",
       functionData
     );
+
 
     window.history.replaceState(
       {},
       document.title,
       window.location.pathname
     );
+
 
     return true;
 
@@ -159,11 +178,13 @@ async function iniciarApp() {
   const oauthProcesado =
     await procesarMercadoPago();
 
+
   if (oauthProcesado) {
 
     return;
 
   }
+
 
   const {
     data
@@ -171,73 +192,121 @@ async function iniciarApp() {
   await supabase.auth.getSession();
 
 
-  if (data.session) {
-
-    const user =
-      data.session.user;
-
-    const { error } =
-      await supabase
-        .from("Socios")
-        .upsert(
-          {
-            "ID usuario": user.id,
-            Gmail: user.email
-          },
-          {
-            onConflict: "ID usuario"
-          }
-        );
-
-    if (error) {
-
-      console.error(error);
-
-      return;
-
-    }
-
-
-    const {
-      data: evento,
-      error: eventoError
-    } =
-    await supabase
-      .from("Eventos")
-      .select("nombre")
-      .eq(
-        "ID usuario",
-        user.id
-      )
-      .maybeSingle();
-
-
-    if (eventoError) {
-
-      console.error(eventoError);
-
-      return;
-
-    }
-
-
-    if (evento) {
-
-      navigate("home");
-
-    } else {
-
-      navigate("home");
-
-    }
-
-  } else {
+  if (!data.session) {
 
     navigate("sesion");
 
+    return;
+
   }
+
+
+  const user =
+    data.session.user;
+
+
+  const { error: socioError } =
+    await supabase
+      .from("Socios")
+      .upsert(
+        {
+          "ID usuario": user.id,
+
+          Gmail: user.email
+        },
+        {
+          onConflict:
+            "ID usuario"
+        }
+      );
+
+
+  if (socioError) {
+
+    console.error(
+      socioError
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data: evento,
+    error: eventoError
+  } =
+  await supabase
+    .from("Eventos")
+    .select("nombre")
+    .eq(
+      "ID usuario",
+      user.id
+    )
+    .limit(1);
+
+
+  if (eventoError) {
+
+    console.error(
+      eventoError
+    );
+
+    return;
+
+  }
+
+
+  if (!evento || evento.length === 0) {
+
+    navigate("create");
+
+    return;
+
+  }
+
+
+  const {
+    data: mercadoPago,
+    error: mercadoPagoError
+  } =
+  await supabase
+    .from("Mercado Pago")
+    .select("ID usuario")
+    .eq(
+      "ID usuario",
+      user.id
+    )
+    .limit(1);
+
+
+  if (mercadoPagoError) {
+
+    console.error(
+      mercadoPagoError
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !mercadoPago ||
+    mercadoPago.length === 0
+  ) {
+
+    navigate("mercadopago");
+
+    return;
+
+  }
+
+
+  navigate("home");
 
 }
 
 
 iniciarApp();
+```
