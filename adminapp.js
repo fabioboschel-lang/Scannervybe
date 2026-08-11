@@ -271,7 +271,7 @@ async function iniciarApp() {
     error: mercadoPagoError
   } =
   await supabase
-    .from("Mercado Pago")
+    .from("MercadoPago")
     .select("ID usuario")
     .eq(
       "ID usuario",
