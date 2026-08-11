@@ -1,4 +1,4 @@
-```javascript
+
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
@@ -309,4 +309,4 @@ async function iniciarApp() {
 
 
 iniciarApp();
-```
+
