@@ -248,7 +248,7 @@ async function iniciarApp() {
   } =
   await supabase
     .from("MercadoPago")
-    .select("ID usuario")
+    .select("*")
     .eq(
       "ID usuario",
       user.id
