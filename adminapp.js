@@ -205,31 +205,7 @@ async function iniciarApp() {
     data.session.user;
 
 
-  const { error: socioError } =
-    await supabase
-      .from("Socios")
-      .upsert(
-        {
-          "ID usuario": user.id,
 
-          Gmail: user.email
-        },
-        {
-          onConflict:
-            "ID usuario"
-        }
-      );
-
-
-  if (socioError) {
-
-    console.error(
-      socioError
-    );
-
-    return;
-
-  }
 
 
   const {
