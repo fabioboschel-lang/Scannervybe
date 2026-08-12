@@ -1,10 +1,10 @@
-
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Scanner } from "./scanner.js";
 import { supabase } from "./supabase.js";
 import { Create } from "./create.js";
 import { MercadoPago } from "./mercadopago.js";
+
 
 const app =
   document.getElementById("app");
@@ -20,7 +20,7 @@ const routes = {
 
   create: Create,
 
-  mercadopago: MercadoPago,
+  mercadopago: MercadoPago
 
 };
 
@@ -78,75 +78,33 @@ async function procesarMercadoPago() {
   }
 
 
-  const {
-    data,
-    error
-  } =
-    await supabase.auth.getSession();
-
-
-  if (error) {
-
-    console.error(error);
-
-    return true;
-
-  }
-
-
-  const user =
-    data.session?.user;
-
-
-  if (!user) {
-
-    console.error(
-      "No hay una sesión de Supabase."
-    );
-
-    return true;
-
-  }
-
-
-  if (state !== user.id) {
-
-    console.error(
-      "El state no coincide con el usuario."
-    );
-
-    return true;
-
-  }
-
-
   try {
 
     const {
-      data: functionData,
-      error: functionError
+      data,
+      error
     } =
-      await supabase.functions.invoke(
-        "mercadopago-oauth",
-        {
-          body: {
-            code: code,
-            state: state
-          }
+    await supabase.functions.invoke(
+      "mercadopago-oauth",
+      {
+        body: {
+          code: code,
+          state: state
         }
-      );
+      }
+    );
 
 
-    if (functionError) {
+    if (error) {
 
-      throw functionError;
+      throw error;
 
     }
 
 
     console.log(
       "Respuesta de Mercado Pago:",
-      functionData
+      data
     );
 
 
@@ -157,8 +115,6 @@ async function procesarMercadoPago() {
     );
 
 
-    return true;
-
   } catch (error) {
 
     console.error(
@@ -166,7 +122,46 @@ async function procesarMercadoPago() {
       error
     );
 
-    return true;
+  }
+
+
+  return true;
+
+}
+
+
+function obtenerUsuarioLocal() {
+
+  const key =
+    "sb-qexgbswdbwlpydolpcll-auth-token";
+
+  const storedSession =
+    localStorage.getItem(key);
+
+
+  if (!storedSession) {
+
+    return null;
+
+  }
+
+
+  try {
+
+    const session =
+      JSON.parse(storedSession);
+
+
+    return session?.user ?? null;
+
+  } catch (error) {
+
+    console.error(
+      "Sesión local inválida:",
+      error
+    );
+
+    return null;
 
   }
 
@@ -186,13 +181,11 @@ async function iniciarApp() {
   }
 
 
-  const {
-    data
-  } =
-  await supabase.auth.getSession();
+  const user =
+    obtenerUsuarioLocal();
 
 
-  if (!data.session) {
+  if (!user) {
 
     navigate("sesion");
 
@@ -201,20 +194,13 @@ async function iniciarApp() {
   }
 
 
-  const user =
-    data.session.user;
-
-
-
-
-
   const {
     data: evento,
     error: eventoError
   } =
   await supabase
     .from("Eventos")
-    .select("nombre")
+    .select("*")
     .eq(
       "ID usuario",
       user.id
@@ -233,7 +219,10 @@ async function iniciarApp() {
   }
 
 
-  if (!evento || evento.length === 0) {
+  if (
+    !evento ||
+    evento.length === 0
+  ) {
 
     navigate("create");
 
@@ -285,4 +274,3 @@ async function iniciarApp() {
 
 
 iniciarApp();
-
