@@ -1,10 +1,7 @@
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
-import { Scanner } from "./scanner.js";
-import { supabase } from "./supabase.js";
 import { Create } from "./create.js";
-import { MercadoPago } from "./mercadopago.js";
-
+import { supabase } from "./supabase.js";
 
 const app =
   document.getElementById("app");
@@ -16,11 +13,7 @@ const routes = {
 
   home: Home,
 
-  scanner: Scanner,
-
-  create: Create,
-
-  mercadopago: MercadoPago
+  create: Create
 
 };
 
@@ -46,90 +39,6 @@ export function navigate(route) {
 }
 
 
-async function procesarMercadoPago() {
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const code =
-    params.get("code");
-
-  const state =
-    params.get("state");
-
-
-  if (!code && !state) {
-
-    return false;
-
-  }
-
-
-  if (!code || !state) {
-
-    console.error(
-      "Respuesta OAuth incompleta."
-    );
-
-    return true;
-
-  }
-
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-    await supabase.functions.invoke(
-      "mercadopago-oauth",
-      {
-        body: {
-          code: code,
-          state: state
-        }
-      }
-    );
-
-
-    if (error) {
-
-      throw error;
-
-    }
-
-
-    console.log(
-      "Respuesta de Mercado Pago:",
-      data
-    );
-
-
-    window.history.replaceState(
-      {},
-      document.title,
-      window.location.pathname
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Error procesando OAuth:",
-      error
-    );
-
-  }
-
-
-  return true;
-
-}
-
-
 function obtenerUsuarioLocal() {
 
   const key =
@@ -138,21 +47,18 @@ function obtenerUsuarioLocal() {
   const storedSession =
     localStorage.getItem(key);
 
-
   if (!storedSession) {
 
     return null;
 
   }
 
-
   try {
 
     const session =
       JSON.parse(storedSession);
 
-
-    return session?.user ?? null;
+    return session?.user?.id ?? null;
 
   } catch (error) {
 
@@ -170,22 +76,11 @@ function obtenerUsuarioLocal() {
 
 async function iniciarApp() {
 
-  const oauthProcesado =
-    await procesarMercadoPago();
-
-
-  if (oauthProcesado) {
-
-    return;
-
-  }
-
-
-  const user =
+  const userId =
     obtenerUsuarioLocal();
 
 
-  if (!user) {
+  if (!userId) {
 
     navigate("sesion");
 
@@ -198,14 +93,14 @@ async function iniciarApp() {
     data: evento,
     error: eventoError
   } =
-  await supabase
-    .from("Eventos")
-    .select("*")
-    .eq(
-      "ID usuario",
-      user.id
-    )
-    .limit(1);
+    await supabase
+      .from("Eventos")
+      .select("nombre")
+      .eq(
+        "ID usuario",
+        userId
+      )
+      .limit(1);
 
 
   if (eventoError) {
@@ -225,43 +120,6 @@ async function iniciarApp() {
   ) {
 
     navigate("create");
-
-    return;
-
-  }
-
-
-  const {
-    data: mercadoPago,
-    error: mercadoPagoError
-  } =
-  await supabase
-    .from("MercadoPago")
-    .select("*")
-    .eq(
-      "ID usuario",
-      user.id
-    )
-    .limit(1);
-
-
-  if (mercadoPagoError) {
-
-    console.error(
-      mercadoPagoError
-    );
-
-    return;
-
-  }
-
-
-  if (
-    !mercadoPago ||
-    mercadoPago.length === 0
-  ) {
-
-    navigate("mercadopago");
 
     return;
 
