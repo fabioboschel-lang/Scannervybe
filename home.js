@@ -237,11 +237,11 @@ async function cargarHome() {
    */
 
   const purchaseUrl =
-    "https://fabioboschel-lang.github.io/Scannervybe/" +
-    "#/evento/" +
-    encodeURIComponent(
-      eventoId
-    );
+  "https://fabioboschel-lang.github.io/eventos/" +
+  "#/evento/" +
+  encodeURIComponent(
+    eventoId
+  );
 
 
   purchaseLink.href =
