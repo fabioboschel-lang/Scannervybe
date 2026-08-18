@@ -1,5 +1,5 @@
-import { navigate } from "./adminapp.js";
 import { supabase } from "./supabase.js";
+
 
 export function Home(app) {
 
@@ -7,10 +7,43 @@ export function Home(app) {
 
     <main class="home-view">
 
+      <!-- =========================
+           ENLACE DE COMPRA
+           ========================= -->
+
       <section class="event-link-container">
 
         <h1 class="event-link-title">
-          Enlace para escanear tickets
+          Enlace de compra
+        </h1>
+
+        <p
+          id="purchaseLinkStatus"
+          class="event-link-status"
+        >
+          Generando enlace...
+        </p>
+
+        <a
+          id="purchaseLink"
+          class="event-link"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display: none;"
+        ></a>
+
+      </section>
+
+
+      <!-- =========================
+           ENLACE DE ESCANEO
+           ========================= -->
+
+      <section class="event-link-container">
+
+        <h1 class="event-link-title">
+          Enlace de escaneo
         </h1>
 
         <p
@@ -25,18 +58,11 @@ export function Home(app) {
           class="event-link"
           href="#"
           target="_blank"
+          rel="noopener noreferrer"
           style="display: none;"
         ></a>
 
       </section>
-
-
-      <button
-        id="createEventBtn"
-        class="create-event-btn"
-      >
-        Publicar evento
-      </button>
 
     </main>
 
@@ -45,33 +71,38 @@ export function Home(app) {
 
   cargarHome();
 
-
-  document
-    .getElementById("createEventBtn")
-    .addEventListener(
-      "click",
-      () => {
-
-        navigate("create");
-
-      }
-    );
-
 }
 
 
 async function cargarHome() {
 
-  const status =
+  const purchaseLinkStatus =
+    document.getElementById(
+      "purchaseLinkStatus"
+    );
+
+  const purchaseLink =
+    document.getElementById(
+      "purchaseLink"
+    );
+
+
+  const scanLinkStatus =
     document.getElementById(
       "scanLinkStatus"
     );
 
-  const link =
+  const scanLink =
     document.getElementById(
       "scanLink"
     );
 
+
+  /*
+   * =========================
+   * OBTENER SESIÓN LOCAL
+   * =========================
+   */
 
   const storedSession =
     localStorage.getItem(
@@ -81,7 +112,10 @@ async function cargarHome() {
 
   if (!storedSession) {
 
-    status.textContent =
+    purchaseLinkStatus.textContent =
+      "No hay una sesión local.";
+
+    scanLinkStatus.textContent =
       "No hay una sesión local.";
 
     return;
@@ -101,9 +135,15 @@ async function cargarHome() {
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Sesión local inválida:",
+      error
+    );
 
-    status.textContent =
+    purchaseLinkStatus.textContent =
+      "Sesión local inválida.";
+
+    scanLinkStatus.textContent =
       "Sesión local inválida.";
 
     return;
@@ -117,13 +157,22 @@ async function cargarHome() {
 
   if (!userId) {
 
-    status.textContent =
+    purchaseLinkStatus.textContent =
+      "No se encontró el ID de usuario.";
+
+    scanLinkStatus.textContent =
       "No se encontró el ID de usuario.";
 
     return;
 
   }
 
+
+  /*
+   * =========================
+   * OBTENER EVENTO
+   * =========================
+   */
 
   const {
     data: evento,
@@ -147,7 +196,10 @@ async function cargarHome() {
       error
     );
 
-    status.textContent =
+    purchaseLinkStatus.textContent =
+      "No se pudo obtener el evento.";
+
+    scanLinkStatus.textContent =
       "No se pudo obtener el evento.";
 
     return;
@@ -157,7 +209,10 @@ async function cargarHome() {
 
   if (!evento) {
 
-    status.textContent =
+    purchaseLinkStatus.textContent =
+      "No existe un evento creado.";
+
+    scanLinkStatus.textContent =
       "No existe un evento creado.";
 
     return;
@@ -165,24 +220,67 @@ async function cargarHome() {
   }
 
 
+  /*
+   * =========================
+   * ID DEL EVENTO
+   * =========================
+   */
+
+  const eventoId =
+    evento.id;
+
+
+  /*
+   * =========================
+   * ENLACE DE COMPRA
+   * =========================
+   */
+
+  const purchaseUrl =
+    "https://fabioboschel-lang.github.io/Scannervybe/" +
+    "#/evento/" +
+    encodeURIComponent(
+      eventoId
+    );
+
+
+  purchaseLink.href =
+    purchaseUrl;
+
+  purchaseLink.textContent =
+    purchaseUrl;
+
+  purchaseLink.style.display =
+    "block";
+
+  purchaseLinkStatus.textContent =
+    "Compartí este enlace con las personas que quieran comprar entradas.";
+
+
+  /*
+   * =========================
+   * ENLACE DE ESCANEO
+   * =========================
+   */
+
   const scanUrl =
     "https://fabioboschel-lang.github.io/ValidarTickets/" +
     "?evento=" +
     encodeURIComponent(
-      evento.id
+      eventoId
     );
 
 
-  link.href =
+  scanLink.href =
     scanUrl;
 
-  link.textContent =
+  scanLink.textContent =
     scanUrl;
 
-  link.style.display =
+  scanLink.style.display =
     "block";
 
-  status.textContent =
+  scanLinkStatus.textContent =
     "Compartí este enlace con tu staff para que puedan escanear los tickets.";
 
 }

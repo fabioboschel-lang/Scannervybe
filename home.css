@@ -78,7 +78,7 @@ a:focus {
 
 
 /* =========================
-   TARJETA DEL ENLACE
+   TARJETA DE ENLACE
    ========================= */
 
 .event-link-container {
@@ -86,7 +86,7 @@ a:focus {
   width: 100%;
   max-width: 520px;
 
-  padding: 28px 24px;
+  padding: 26px 24px;
 
   background:
     rgba(255, 255, 255, 0.94);
@@ -114,7 +114,7 @@ a:focus {
 
   margin-bottom: 10px;
 
-  font-size: 25px;
+  font-size: 24px;
 
   font-weight: 800;
 
@@ -126,7 +126,7 @@ a:focus {
 
 
 /* =========================
-   ESTADO
+   ESTADO / DESCRIPCIÓN
    ========================= */
 
 .event-link-status {
@@ -215,75 +215,56 @@ a:focus {
 
 
 /* =========================
-   BOTON PUBLICAR EVENTO
-   ========================= */
-
-.create-event-btn {
-
-  width: 100%;
-  max-width: 300px;
-
-  height: 58px;
-
-  border: none;
-
-  border-radius: 16px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #111827,
-      #1f2937
-    );
-
-  color: #ffffff;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 10px 25px
-    rgba(17, 24, 39, 0.20);
-
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    opacity 0.18s ease;
-
-}
-
-
-.create-event-btn:hover {
-
-  box-shadow:
-    0 14px 30px
-    rgba(17, 24, 39, 0.25);
-
-  transform:
-    translateY(-1px);
-
-}
-
-
-.create-event-btn:active {
-
-  transform:
-    scale(0.97);
-
-  box-shadow:
-    0 6px 15px
-    rgba(17, 24, 39, 0.18);
-
-}
-
-
-/* =========================
    MOVILES
    ========================= */
 
 @media (max-width: 480px) {
 
- 
+  .home-view {
+
+    padding:
+      24px 16px;
+
+    gap: 14px;
+
+  }
+
+
+  .event-link-container {
+
+    padding:
+      23px 18px;
+
+    border-radius:
+      21px;
+
+  }
+
+
+  .event-link-title {
+
+    font-size:
+      22px;
+
+  }
+
+
+  .event-link-status {
+
+    font-size:
+      14px;
+
+  }
+
+
+  .event-link {
+
+    font-size:
+      13px;
+
+    padding:
+      13px 12px;
+
+  }
+
+}
