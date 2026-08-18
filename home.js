@@ -5,136 +5,147 @@ export function Home(app) {
 
   app.innerHTML = `
 
-    <div class="home-view">
+    <main class="home-view">
 
-      <div class="event-link-container">
+      <section class="event-link-container">
 
-        <h2 class="event-link-title">
-          Tu evento
-        </h2>
+        <h1 class="event-link-title">
+          Enlace para escanear tickets
+        </h1>
 
         <p
-          id="eventLinkStatus"
+          id="scanLinkStatus"
           class="event-link-status"
         >
-          Cargando enlace...
+          Generando enlace...
         </p>
 
         <a
-          id="eventLink"
+          id="scanLink"
           class="event-link"
           href="#"
           target="_blank"
           style="display: none;"
         ></a>
 
-      </div>
+      </section>
 
 
       <button
-        id="scanBtn"
-        class="scan-btn"
+        id="createEventBtn"
+        class="create-event-btn"
       >
-        Escanear
+        Publicar evento
       </button>
 
-    </div>
+    </main>
 
   `;
 
 
-  /*
-   * ESCANEAR
-   */
+  cargarHome();
+
 
   document
-    .getElementById("scanBtn")
+    .getElementById("createEventBtn")
     .addEventListener(
       "click",
-      () => navigate("scanner")
+      () => {
+
+        navigate("create");
+
+      }
     );
-
-
-  /*
-   * OBTENER EVENTO DEL USUARIO
-   */
-
-  cargarEnlaceEvento();
 
 }
 
 
-async function cargarEnlaceEvento() {
+async function cargarHome() {
 
   const status =
     document.getElementById(
-      "eventLinkStatus"
+      "scanLinkStatus"
     );
 
   const link =
     document.getElementById(
-      "eventLink"
+      "scanLink"
     );
 
 
-  /*
-   * OBTENER SESIÓN
-   */
-
-  const {
-    data: sessionData,
-    error: sessionError
-  } =
-    await supabase.auth.getSession();
+  const storedSession =
+    localStorage.getItem(
+      "sb-qexgbswdbwlpydolpcll-auth-token"
+    );
 
 
-  if (sessionError) {
-
-    console.error(sessionError);
+  if (!storedSession) {
 
     status.textContent =
-      "No se pudo obtener la sesión.";
+      "No hay una sesión local.";
 
     return;
 
   }
 
 
-  const user =
-    sessionData.session?.user;
+  let session;
 
 
-  if (!user) {
+  try {
+
+    session =
+      JSON.parse(
+        storedSession
+      );
+
+  } catch (error) {
+
+    console.error(error);
 
     status.textContent =
-      "No hay ninguna sesión iniciada.";
+      "Sesión local inválida.";
 
     return;
 
   }
 
 
-  /*
-   * BUSCAR EL EVENTO DEL USUARIO
-   */
+  const userId =
+    session?.user?.id;
+
+
+  if (!userId) {
+
+    status.textContent =
+      "No se encontró el ID de usuario.";
+
+    return;
+
+  }
+
 
   const {
     data: evento,
-    error: eventoError
+    error
   } =
     await supabase
       .from("Eventos")
       .select("id")
       .eq(
         "ID usuario",
-        user.id
+        userId
       )
+      .limit(1)
       .maybeSingle();
 
 
-  if (eventoError) {
+  if (error) {
 
-    console.error(eventoError);
+    console.error(
+      "Error obteniendo evento:",
+      error
+    );
 
     status.textContent =
       "No se pudo obtener el evento.";
@@ -147,32 +158,31 @@ async function cargarEnlaceEvento() {
   if (!evento) {
 
     status.textContent =
-      "Todavía no publicaste ningún evento.";
+      "No existe un evento creado.";
 
     return;
 
   }
 
 
-  /*
-   * CREAR URL PÚBLICA
-   */
+  const scanUrl =
+    "https://fabioboschel-lang.github.io/ValidarTickets/" +
+    "?evento=" +
+    encodeURIComponent(
+      evento.id
+    );
 
-  const url =
-    `https://fabioboschel-lang.github.io/eventos/#/evento/${evento.id}`;
 
+  link.href =
+    scanUrl;
 
-  /*
-   * MOSTRAR URL
-   */
+  link.textContent =
+    scanUrl;
+
+  link.style.display =
+    "block";
 
   status.textContent =
-    "Compartí este enlace con tus clientes:";
-
-  link.href = url;
-
-  link.textContent = url;
-
-  link.style.display = "block";
+    "Compartí este enlace con tu staff para que puedan escanear los tickets.";
 
 }
