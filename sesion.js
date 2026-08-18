@@ -23,9 +23,7 @@ export function Sesion(app) {
       "click",
       async () => {
 
-        alert(
-          "Redirect: https://fabioboschel-lang.github.io/Scannervybe/"
-        );
+      
 
         const { data, error } =
           await supabase.auth.signInWithOAuth({
