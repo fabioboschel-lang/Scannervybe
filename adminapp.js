@@ -3,6 +3,7 @@ import { Home } from "./home.js";
 import { Create } from "./create.js";
 import { supabase } from "./supabase.js";
 
+
 const app =
   document.getElementById("app");
 
@@ -39,6 +40,10 @@ export function navigate(route) {
 }
 
 
+/* =========================
+   OBTENER USUARIO LOCAL
+   ========================= */
+
 function obtenerUsuarioLocal() {
 
   const key =
@@ -47,18 +52,24 @@ function obtenerUsuarioLocal() {
   const storedSession =
     localStorage.getItem(key);
 
+
   if (!storedSession) {
 
     return null;
 
   }
 
+
   try {
 
     const session =
       JSON.parse(storedSession);
 
-    return session?.user?.id ?? null;
+
+    return (
+      session?.user?.id ??
+      null
+    );
 
   } catch (error) {
 
@@ -74,11 +85,22 @@ function obtenerUsuarioLocal() {
 }
 
 
+/* =========================
+   INICIAR APLICACIÓN
+   ========================= */
+
 async function iniciarApp() {
 
   const userId =
     obtenerUsuarioLocal();
 
+
+  /*
+   * PRIMER SÍ:
+   *
+   * ¿Existe un ID de usuario
+   * en Local Storage?
+   */
 
   if (!userId) {
 
@@ -88,6 +110,13 @@ async function iniciarApp() {
 
   }
 
+
+  /*
+   * SEGUNDO SÍ:
+   *
+   * ¿Existe un evento creado
+   * por este usuario?
+   */
 
   const {
     data: evento,
@@ -106,6 +135,7 @@ async function iniciarApp() {
   if (eventoError) {
 
     console.error(
+      "Error comprobando evento:",
       eventoError
     );
 
@@ -113,6 +143,10 @@ async function iniciarApp() {
 
   }
 
+
+  /*
+   * NO TIENE EVENTO
+   */
 
   if (
     !evento ||
@@ -126,9 +160,56 @@ async function iniciarApp() {
   }
 
 
+  /*
+   * TIENE EVENTO
+   */
+
   navigate("home");
 
 }
 
 
-iniciarApp();
+/* =========================
+   ESPERAR A SUPABASE
+   ========================= */
+
+let aplicacionIniciada =
+  false;
+
+
+const {
+  data: authListener
+} =
+  supabase.auth.onAuthStateChange(
+    (event, session) => {
+
+      /*
+       * INITIAL_SESSION ocurre
+       * cuando Supabase terminó
+       * de cargar/procesar la sesión
+       * inicial.
+       */
+
+      if (
+        event ===
+        "INITIAL_SESSION"
+      ) {
+
+        if (
+          aplicacionIniciada
+        ) {
+
+          return;
+
+        }
+
+        aplicacionIniciada =
+          true;
+
+
+        iniciarApp();
+
+      }
+
+    }
+  );
