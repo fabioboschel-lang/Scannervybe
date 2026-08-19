@@ -1,6 +1,7 @@
-
+import { KiteEditor } from "./kiteditor.js";
 import { navigate } from "./adminapp.js";
 import { supabase } from "./supabase.js";
+
 
 export function Create(app) {
 
@@ -74,6 +75,11 @@ export function Create(app) {
         placeholder="Valor de entrada"
       >
 
+      <div
+        id="kiteEditorContainer"
+        class="kite-editor-container"
+      ></div>
+
       <button
         id="createBtn"
         class="create-btn"
@@ -86,14 +92,26 @@ export function Create(app) {
   `;
 
 
+  /*
+   * =========================
+   * SELECTOR DE IMAGEN
+   * =========================
+   */
+
   const imageInput =
-    document.getElementById("eventImage");
+    document.getElementById(
+      "eventImage"
+    );
 
   const imagePreview =
-    document.getElementById("imagePreview");
+    document.getElementById(
+      "imagePreview"
+    );
 
   const imageText =
-    document.getElementById("imageText");
+    document.getElementById(
+      "imageText"
+    );
 
 
   imageInput.addEventListener(
@@ -104,11 +122,15 @@ export function Create(app) {
         imageInput.files[0];
 
       if (!imagen) {
+
         return;
+
       }
 
       imagePreview.src =
-        URL.createObjectURL(imagen);
+        URL.createObjectURL(
+          imagen
+        );
 
       imagePreview.style.display =
         "block";
@@ -120,6 +142,36 @@ export function Create(app) {
   );
 
 
+  /*
+   * =========================
+   * KITE EDITOR
+   * =========================
+   */
+
+  const kiteEditor =
+    KiteEditor({
+      initialColor:
+        "#ffffff"
+    });
+
+
+  const kiteEditorContainer =
+    document.getElementById(
+      "kiteEditorContainer"
+    );
+
+
+  kiteEditorContainer.appendChild(
+    kiteEditor.element
+  );
+
+
+  /*
+   * =========================
+   * CREAR EVENTO
+   * =========================
+   */
+
   document
     .getElementById("createBtn")
     .addEventListener(
@@ -128,42 +180,74 @@ export function Create(app) {
 
         const nombre =
           document
-            .getElementById("eventName")
+            .getElementById(
+              "eventName"
+            )
             .value
             .trim();
+
 
         const imagen =
           imageInput.files[0];
 
+
         const descripcion =
           document
-            .getElementById("eventDescription")
+            .getElementById(
+              "eventDescription"
+            )
             .value
             .trim();
+
 
         const redes =
           document
-            .getElementById("eventSocials")
+            .getElementById(
+              "eventSocials"
+            )
             .value
             .trim();
+
 
         const ubicacion =
           document
-            .getElementById("eventLocation")
+            .getElementById(
+              "eventLocation"
+            )
             .value
             .trim();
+
 
         const fecha =
           document
-            .getElementById("eventDate")
+            .getElementById(
+              "eventDate"
+            )
             .value;
+
 
         const valor =
           document
-            .getElementById("eventPrice")
+            .getElementById(
+              "eventPrice"
+            )
             .value
             .trim();
 
+
+        /*
+         * OBTENER COLOR
+         */
+
+        const color =
+          kiteEditor.getColor();
+
+
+        /*
+         * =========================
+         * VALIDACIONES
+         * =========================
+         */
 
         if (!nombre) {
 
@@ -242,10 +326,17 @@ export function Create(app) {
         }
 
 
+        /*
+         * =========================
+         * OBTENER USUARIO
+         * =========================
+         */
+
         const {
           data: sessionData
         } =
           await supabase.auth.getSession();
+
 
         const user =
           sessionData.session?.user;
@@ -262,7 +353,17 @@ export function Create(app) {
         }
 
 
+        /*
+         * =========================
+         * PUBLICAR EVENTO
+         * =========================
+         */
+
         try {
+
+          /*
+           * EXTENSIÓN DE IMAGEN
+           */
 
           const extension =
             imagen.name
@@ -270,13 +371,25 @@ export function Create(app) {
               .pop();
 
 
+          /*
+           * NOMBRE ÚNICO
+           */
+
           const nombreArchivo =
             `${crypto.randomUUID()}.${extension}`;
 
 
+          /*
+           * RUTA DEL ARCHIVO
+           */
+
           const ruta =
             `${user.id}/${nombreArchivo}`;
 
+
+          /*
+           * SUBIR IMAGEN
+           */
 
           const {
             error: uploadError
@@ -297,18 +410,28 @@ export function Create(app) {
           }
 
 
+          /*
+           * OBTENER URL PÚBLICA
+           */
+
           const {
             data: urlData
           } =
             supabase
               .storage
               .from("eventos")
-              .getPublicUrl(ruta);
+              .getPublicUrl(
+                ruta
+              );
 
 
           const imagenUrl =
             urlData.publicUrl;
 
+
+          /*
+           * INSERTAR EVENTO
+           */
 
           const {
             error
@@ -317,21 +440,32 @@ export function Create(app) {
               .from("Eventos")
               .insert({
 
-                nombre: nombre,
+                nombre:
+                  nombre,
 
-                imagen: imagenUrl,
+                imagen:
+                  imagenUrl,
 
-                descripcion: descripcion,
+                descripcion:
+                  descripcion,
 
-                redes: redes,
+                redes:
+                  redes,
 
-                ubicacion: ubicacion,
+                ubicacion:
+                  ubicacion,
 
-                fecha: fecha,
+                fecha:
+                  fecha,
 
-                valor: Number(valor),
+                valor:
+                  Number(valor),
 
-                "ID usuario": user.id
+                "ID usuario":
+                  user.id,
+
+                color:
+                  color
 
               });
 
@@ -343,11 +477,19 @@ export function Create(app) {
           }
 
 
-          navigate("home");
+          /*
+           * EVENTO CREADO
+           */
+
+          navigate(
+            "home"
+          );
 
         } catch (err) {
 
-          console.error(err);
+          console.error(
+            err
+          );
 
           alert(
             "No se pudo publicar el evento."
@@ -359,4 +501,3 @@ export function Create(app) {
     );
 
 }
-
