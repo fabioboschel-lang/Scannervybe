@@ -6,7 +6,7 @@ import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Create } from "./create.js";
 import { supabase } from "./supabase.js";
-import {MercadoPago } from "./mercadopago.js";
+import { MercadoPago } from "./mercadopago.js";
 
 const app =
   document.getElementById("app");
