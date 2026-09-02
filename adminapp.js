@@ -6,7 +6,7 @@ import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Create } from "./create.js";
 import { supabase } from "./supabase.js";
-
+import {MercadoPago } from "./mercadopago.js";
 
 const app =
   document.getElementById("app");
@@ -18,7 +18,10 @@ const routes = {
 
   home: Home,
 
-  create: Create
+  create: Create,
+
+  mercadopago: mercadopago
+  
 
 };
 
@@ -157,7 +160,7 @@ async function iniciarApp() {
     evento.length === 0
   ) {
 
-    navigate("create");
+    navigate("mercadopago");
 
     return;
 
@@ -168,7 +171,7 @@ async function iniciarApp() {
    * TIENE EVENTO
    */
 
-  navigate("home");
+  navigate("mercadopago");
 
 }
 
