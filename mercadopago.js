@@ -1,0 +1,162 @@
+export function MercadoPago(app) {
+
+  app.innerHTML = `
+
+    <div class="mercadopago-view">
+
+      <h1 class="mercadopago-title">
+        Conectá tu cuenta de Mercado Pago
+      </h1>
+
+      <p class="mercadopago-description">
+        Conectá tu cuenta para poder recibir los pagos de tus eventos.
+      </p>
+
+      <button
+        id="mercadopagoBtn"
+        class="mercadopago-btn"
+      >
+        Conectar Mercado Pago
+      </button>
+
+    </div>
+
+  `;
+
+  document
+    .getElementById("mercadopagoBtn")
+    .addEventListener(
+      "click",
+      () => {
+
+        /*
+         * =========================
+         * OBTENER SESIÓN LOCAL
+         * =========================
+         */
+
+        const storedSession =
+          localStorage.getItem(
+            "sb-qexgbswdbwlpydolpcll-auth-token"
+          );
+
+
+        if (!storedSession) {
+
+          alert(
+            "No hay una sesión local."
+          );
+
+          return;
+
+        }
+
+
+        let session;
+
+
+        try {
+
+          session =
+            JSON.parse(
+              storedSession
+            );
+
+        } catch (error) {
+
+          console.error(
+            "Sesión local inválida:",
+            error
+          );
+
+          alert(
+            "Sesión local inválida."
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * =========================
+         * OBTENER USER ID
+         * =========================
+         */
+
+        const userId =
+          session?.user?.id;
+
+
+        if (!userId) {
+
+          alert(
+            "No se encontró el ID de usuario."
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * =========================
+         * MERCADO PAGO
+         * =========================
+         */
+
+        const state =
+          userId;
+
+        const clientId =
+          "3944581132326328";
+
+        const redirectUri =
+          "https://fabioboschel-lang.github.io/Scannervybe/";
+
+
+        const authorizationUrl =
+          new URL(
+            "https://auth.mercadopago.com.ar/authorization"
+          );
+
+
+        authorizationUrl.searchParams.set(
+          "client_id",
+          clientId
+        );
+
+        authorizationUrl.searchParams.set(
+          "response_type",
+          "code"
+        );
+
+        authorizationUrl.searchParams.set(
+          "platform_id",
+          "mp"
+        );
+
+        authorizationUrl.searchParams.set(
+          "redirect_uri",
+          redirectUri
+        );
+
+        authorizationUrl.searchParams.set(
+          "state",
+          state
+        );
+
+
+        /*
+         * =========================
+         * REDIRIGIR A MERCADO PAGO
+         * =========================
+         */
+
+        window.location.href =
+          authorizationUrl.toString();
+
+      }
+    );
+
+}
