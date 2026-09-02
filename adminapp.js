@@ -1,6 +1,7 @@
 import {
   procesarAutorizacionMercadoPago
 } from "./mpoauthvalidate.js";
+
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Create } from "./create.js";
@@ -173,46 +174,48 @@ async function iniciarApp() {
 
 
 /* =========================
-   ESPERAR A SUPABASE
+   INICIAR APLICACIÓN
    ========================= */
 
-let aplicacionIniciada =
-  false;
+async function arrancarAplicacion() {
+
+  /*
+   * Primero comprobamos si
+   * estamos regresando de
+   * Mercado Pago.
+   */
+
+  const mercadoPagoProcesado =
+    await procesarAutorizacionMercadoPago();
 
 
-const {
-  data: authListener
-} =
-  supabase.auth.onAuthStateChange(
-    (event, session) => {
+  /*
+   * Si procesamos correctamente
+   * una autorización, ya podemos
+   * continuar con la aplicación.
+   */
 
-      /*
-       * INITIAL_SESSION ocurre
-       * cuando Supabase terminó
-       * de cargar/procesar la sesión
-       * inicial.
-       */
+  if (mercadoPagoProcesado) {
 
-      if (
-        event ===
-        "INITIAL_SESSION"
-      ) {
+    console.log(
+      "Autorización de Mercado Pago procesada."
+    );
 
-        if (
-          aplicacionIniciada
-        ) {
-
-          return;
-
-        }
-
-        aplicacionIniciada =
-          true;
+  }
 
 
-        iniciarApp();
+  /*
+   * Después iniciamos el
+   * funcionamiento normal.
+   */
 
-      }
+  await iniciarApp();
 
-    }
-  );
+}
+
+
+/* =========================
+   ARRANCAR
+   ========================= */
+
+arrancarAplicacion();
