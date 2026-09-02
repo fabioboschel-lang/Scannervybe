@@ -20,7 +20,7 @@ const routes = {
 
   create: Create,
 
-  mercadopago: mercadopago
+  mercadopago: MercadoPago
   
 
 };
