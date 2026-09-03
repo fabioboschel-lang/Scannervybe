@@ -160,7 +160,7 @@ async function iniciarApp() {
     evento.length === 0
   ) {
 
-    navigate("create");
+    navigate("mercadopago");
 
     return;
 
@@ -171,7 +171,7 @@ async function iniciarApp() {
    * TIENE EVENTO
    */
 
-  navigate("home");
+  navigate("mercadopago");
 
 }
 
