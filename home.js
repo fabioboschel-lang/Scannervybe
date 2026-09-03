@@ -14,7 +14,7 @@ export function Home(app) {
       <section class="event-link-container">
 
         <h1 class="event-link-title">
-          Enlace de compra
+          Enlace de 
         </h1>
 
         <p
