@@ -32,7 +32,7 @@ export function Sesion(app) {
 
             options: {
               redirectTo:
-                "https://fabioboschel-lang.github.io/Scannervybe/"
+                "https://fabioboschel-lang.github.io/SOCIO.APP/"
             }
 
           });
