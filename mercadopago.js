@@ -112,7 +112,7 @@ export function MercadoPago(app) {
           "3944581132326328";
 
         const redirectUri =
-          "https://fabioboschel-lang.github.io/Scannervybe/";
+          "https://fabioboschel-lang.github.io/SOCIO.APP/";
 
 
         const authorizationUrl =
